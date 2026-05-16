@@ -1,0 +1,38 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Env secrets (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+
+# Frontend (vtoa-fr)
+vtoa-fr/node_modules/
+vtoa-fr/.next/
+vtoa-fr/out/
+vtoa-fr/build/
+vtoa-fr/.vercel/
+vtoa-fr/*.tsbuildinfo
+vtoa-fr/next-env.d.ts
+
+# Backend (vota-be)
+vota-be/.venv/
+vota-be/venv/
+vota-be/env/
+vota-be/__pycache__/
+vota-be/**/__pycache__/
+vota-be/*.py[cod]
+vota-be/.pytest_cache/
+vota-be/.mypy_cache/
+vota-be/.ruff_cache/
+vota-be/storage/uploads/*
+vota-be/storage/results/*
+!vota-be/storage/uploads/.gitkeep
+!vota-be/storage/results/.gitkeep
+vota-be/*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp

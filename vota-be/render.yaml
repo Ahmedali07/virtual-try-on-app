@@ -1,0 +1,20 @@
+# Optional: deploy vota-be on Render (https://render.com)
+# Create a Web Service and point Root Directory to `vota-be`.
+services:
+  - type: web
+    name: vtoa-api
+    runtime: python
+    rootDir: vota-be
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: TRYON_PROVIDER
+        sync: false
+      - key: REPLICATE_API_TOKEN
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
