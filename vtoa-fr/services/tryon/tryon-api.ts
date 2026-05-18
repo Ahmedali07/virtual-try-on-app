@@ -24,6 +24,14 @@ function joinUrl(baseUrl: string, path: string): string {
 }
 
 /**
+ * `fetch` must not be called as a detached method (e.g. `this.fetchImpl()`),
+ * or browsers throw "Illegal invocation". Always invoke through a closure.
+ */
+function bindFetch(impl: typeof fetch = fetch): typeof fetch {
+  return (input, init) => impl(input, init);
+}
+
+/**
  * Normalizes backend JSON keys across iterations (snake_case vs camelCase).
  */
 function pickOutputImageUrl(data: Record<string, unknown>): string | undefined {
@@ -53,7 +61,7 @@ export class TryOnApiClient {
 
   constructor(config: TryOnApiClientConfig) {
     this.baseUrl = config.baseUrl.replace(/\/$/, "");
-    this.fetchImpl = config.fetchImpl ?? fetch;
+    this.fetchImpl = bindFetch(config.fetchImpl);
   }
 
   async health(): Promise<{ status: string }> {
