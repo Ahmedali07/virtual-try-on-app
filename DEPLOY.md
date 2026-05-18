@@ -1,65 +1,71 @@
 # Deploy: GitHub + Vercel + API host
 
-## 1. Push this monorepo to GitHub
+## Live production
 
-From the repo root (`VTOA`):
+| App | URL |
+| --- | --- |
+| **Frontend** | https://virtual-try-on-app-nu.vercel.app |
+| **Backend** | https://vtoa-api.onrender.com |
+| **Health** | https://vtoa-api.onrender.com/api/health → `{"status":"ok"}` |
+| **GitHub** | https://github.com/Ahmedali07/virtual-try-on-app |
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: virtual try-on frontend and backend"
-```
+## Vercel (frontend) — required env
 
-Create the repo on GitHub (pick one):
+Project → **Settings** → **Environment Variables** → **Production** (and **Preview** if needed):
 
-**GitHub website:** [github.com/new](https://github.com/new) → name e.g. `virtual-try-on-app` → do **not** add README (you already have one) → create → then:
+| Name | Value |
+| --- | --- |
+| `NEXT_PUBLIC_API_BASE_URL` | `https://vtoa-api.onrender.com` |
 
-```bash
-git remote add origin https://github.com/YOUR_USERNAME/virtual-try-on-app.git
-git branch -M main
-git push -u origin main
-```
+**No trailing slash.** Save, then **Redeploy** the frontend.
 
-**GitHub CLI** (after `gh auth login`):
+## Render (backend) — required env
 
-```bash
-gh repo create virtual-try-on-app --public --source=. --remote=origin --push
-```
-
-## 2. Import into Vercel
-
-1. [vercel.com/new](https://vercel.com/new) → **Import** your GitHub repo.
-2. **Root Directory:** click *Edit* → set to **`vtoa-fr`** (required for this monorepo).
-3. Framework: **Next.js** (auto-detected).
-4. **Environment variables** (Production):
-
-   | Name | Value |
-   | --- | --- |
-   | `NEXT_PUBLIC_API_BASE_URL` | Your live FastAPI URL, e.g. `https://vtoa-api.onrender.com` |
-
-5. Deploy.
-
-Preview deployments use the same vars unless you override per environment.
-
-## 3. Deploy the backend (not on Vercel)
-
-FastAPI + long Replicate jobs fit **Railway**, **Render**, or **Fly.io** better than Vercel serverless.
-
-**Render (example):** New → Web Service → same repo → **Root Directory** `vota-be` → use `render.yaml` or:
-
-- Build: `pip install -r requirements.txt`
-- Start: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-
-Set env from `vota-be/.env.example` (`REPLICATE_API_TOKEN`, `TRYON_PROVIDER`, `CORS_ORIGINS` including your Vercel URL, `PUBLIC_BASE_URL` if needed).
-
-After the API is live, set `NEXT_PUBLIC_API_BASE_URL` on Vercel and redeploy the frontend.
-
-## 4. CORS checklist
-
-`vota-be` `.env`:
+Service **vtoa-api** → **Environment**:
 
 ```env
-CORS_ORIGINS=https://your-app.vercel.app,https://your-app-*.vercel.app
+PYTHON_VERSION=3.11.0
+TRYON_PROVIDER=huggingface
+CORS_ORIGINS=https://virtual-try-on-app-nu.vercel.app,http://localhost:3000
+PUBLIC_BASE_URL=https://vtoa-api.onrender.com
 ```
 
-Use your exact production domain; add preview URLs if you test from Vercel preview branches.
+Redeploy Render after changing env vars.
+
+For real AI try-on (Replicate, paid per run):
+
+```env
+TRYON_PROVIDER=replicate
+REPLICATE_API_TOKEN=r8_your_token_here
+```
+
+## Verify end-to-end
+
+1. https://vtoa-api.onrender.com/api/health → `{"status":"ok"}`
+2. https://virtual-try-on-app-nu.vercel.app/try-on → upload photo → **Generate preview**
+
+If step 2 fails: confirm Vercel has `NEXT_PUBLIC_API_BASE_URL` and was redeployed; check Render logs and `CORS_ORIGINS`.
+
+---
+
+## Reference: initial setup
+
+### GitHub
+
+Repo: https://github.com/Ahmedali07/virtual-try-on-app
+
+### Vercel import
+
+1. [vercel.com/new](https://vercel.com/new) → import repo.
+2. **Root Directory:** `vtoa-fr`
+3. Set `NEXT_PUBLIC_API_BASE_URL` (see above).
+
+### Render import
+
+1. [render.com](https://render.com) → **Web Service** → repo `virtual-try-on-app`.
+2. **Root Directory:** `vota-be`
+3. **Build:** `pip install -r requirements.txt`
+4. **Start:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. Env vars (see above).
+
+See also `vota-be/render.yaml`.

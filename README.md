@@ -26,16 +26,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) → **Try Demo** at `/try-on`.
 
-## Deploy
+## Deploy (production)
 
-| App | Platform | Root directory |
+| App | URL | Platform |
 | --- | --- | --- |
-| Frontend | [Vercel](https://vercel.com) | `vtoa-fr` (see `vercel.json`) |
-| Backend | Railway, Render, or Fly.io | `vota-be` |
+| Frontend | https://virtual-try-on-app-nu.vercel.app | [Vercel](https://vercel.com) · root `vtoa-fr` |
+| Backend | https://vtoa-api.onrender.com | [Render](https://render.com) · root `vota-be` |
 
-Set `NEXT_PUBLIC_API_BASE_URL` on Vercel to your production API URL. Set `PUBLIC_BASE_URL` on the backend to match how the browser reaches the API (or use CORS + direct URL).
+**Vercel env:** `NEXT_PUBLIC_API_BASE_URL=https://vtoa-api.onrender.com`  
+**Render env:** `PUBLIC_BASE_URL=https://vtoa-api.onrender.com` and `CORS_ORIGINS=https://virtual-try-on-app-nu.vercel.app,http://localhost:3000`
 
-See `vtoa-fr/README.md` and `vota-be/README.md` for provider-specific env vars (Replicate, Hugging Face).
+Full checklist: [`DEPLOY.md`](./DEPLOY.md). Provider keys (Replicate): `vota-be/README.md`.
 
 ## Repository layout
 

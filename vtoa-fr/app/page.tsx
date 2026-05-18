@@ -61,9 +61,8 @@ export default function HomePage() {
         </section>
       </main>
       <footer className="border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
-        Demo frontend · configure{" "}
-        <code className="rounded bg-muted px-1 py-0.5">NEXT_PUBLIC_API_BASE_URL</code>{" "}
-        to point at FastAPI
+        API:{" "}
+        <code className="rounded bg-muted px-1 py-0.5">vtoa-api.onrender.com</code>
       </footer>
     </div>
   );
